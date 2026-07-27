@@ -2,22 +2,32 @@
 
 ## Project Overview
 
-This project analyzes **3,150 telecom customers** to identify customer behaviors associated with churn and determine which customer groups should be prioritized for retention.
+This project analyzes **3,150 telecom customers** to identify behaviors associated with customer churn and determine which customers should be prioritized for retention.
 
-I used **SQL Server** for data analysis and customer segmentation, then built an interactive **Tableau dashboard** to communicate the findings.
+I used **SQL Server** to analyze churn patterns, identify high-risk customer groups, and create an explainable risk segmentation. I then built an interactive **Tableau dashboard** to communicate the findings.
 
-The main objective was to answer:
+### Business Question
 
 > **Which customers are most likely to churn, and what factors are associated with that churn?**
 
 ---
 
+## Dashboard
+
+![Telecom Customer Churn Dashboard](https://raw.githubusercontent.com/shauryasingh2810/telecom-customer-churn-analysis/main/dashboard/Telecom%20Customer%20Churn%20Analysis.png)
+
+### Interactive Tableau Dashboard
+
+[**View Interactive Tableau Dashboard →**](https://public.tableau.com/app/profile/shaurya.singh8249/viz/TelecomCustomerChurnAnalysisPublic/TelecomCustomerChurnAnalysis)
+
+---
+
 ## Tools Used
 
-- SQL Server / SSMS
-- Tableau
-- Excel / CSV
-- GitHub
+- **SQL Server / SSMS** — data validation, analysis and customer segmentation
+- **Tableau** — interactive dashboard and data visualization
+- **Excel / CSV** — initial data review and column standardization
+- **GitHub** — project documentation and portfolio presentation
 
 ---
 
@@ -25,7 +35,7 @@ The main objective was to answer:
 
 **Iranian Telecom Churn Dataset**
 
-The dataset contains **3,150 customer records** and information about customer activity, usage, complaints, subscription length and churn.
+The dataset contains **3,150 customer records** with information about customer activity, service usage, complaints, subscription length and churn.
 
 ### Data Source
 
@@ -34,37 +44,16 @@ This project uses a processed version of the Iranian Telecom Churn Dataset.
 - Original dataset: [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/563/iranian+churn+dataset)
 - Portfolio dataset: [Kaggle - Iranian Telecom Company Churn](https://www.kaggle.com/datasets/tombutton/iranian-telecom-company-churn)
 
-### Target Variable
-
-- `1` = Churned
-- `0` = Retained
-
-### Main Features
-
-- Subscription Length
-- Charge Amount
-- Seconds of Use
-- Frequency of Use
-- Frequency of SMS
-- Distinct Called Numbers
-- Call Failures
-- Tariff Plan
-- Status
-- Age Group
-- Complaints
-- Churn
-
-### Data Quality Check
+### Data Quality
 
 | Metric | Result |
 |---|---:|
-| Rows | 3,150 |
+| Customers | 3,150 |
 | Columns | 13 |
 | Missing Values | 0 |
 | Duplicate Rows | 0 |
-| Unique Customers | 3,150 |
-
-The dataset was already relatively clean. Column names were standardized before importing the data into SQL Server.
+| Churned Customers | 495 |
+| Overall Churn Rate | **15.71%** |
 
 ---
 
@@ -92,193 +81,51 @@ Business Recommendations
 
 ---
 
-# SQL Analysis
-
-## Overall Churn
-
-| Metric | Value |
-|---|---:|
-| Total Customers | 3,150 |
-| Churned Customers | 495 |
-| Retained Customers | 2,655 |
-| Churn Rate | **15.71%** |
-
----
-
 ## Key Findings
 
-### 1. Complaints
+### 1. Complaints were the strongest churn signal
 
-| Group | Churn Rate |
-|---|---:|
-| Complaint | **82.99%** |
-| No Complaint | 10.14% |
+Customers who complained had an **82.99% churn rate**, compared with only **10.14%** among customers without complaints.
 
-Customers who complained had a dramatically higher churn rate.
+### 2. Inactive customers had substantially higher churn
 
-**Finding:** Complaints were one of the strongest churn signals in the dataset.
+- Inactive customers: **47.31% churn**
+- Active customers: **5.28% churn**
 
----
+### 3. Low engagement was strongly associated with churn
 
-### 2. Customer Status
+Low-frequency customers had a **33.92% churn rate**, while churn fell sharply among customers with higher service usage.
 
-| Status | Churn Rate |
-|---|---:|
-| Inactive | **47.31%** |
-| Active | 5.28% |
+Customers with low total usage time had a **40.14% churn rate**, compared with only **0.33%** among very-high-usage customers.
 
-**Finding:** Inactive customers were substantially more likely to churn than active customers.
+### 4. New customers showed elevated churn
 
----
+Customers within their first **12 months** had a **38.57% churn rate**.
 
-### 3. Usage Level
+New customers with low usage had an even higher **87.04% churn rate**.
 
-| Usage Level | Churn Rate |
-|---|---:|
-| Low | **33.92%** |
-| Medium | 16.38% |
-| High | 4.82% |
-| Very High | 0.00% |
+### 5. Age was not a major churn differentiator
 
-**Finding:** Churn decreased sharply as customer usage increased, showing a strong association between low engagement and churn.
+Churn rates across age groups were relatively similar:
+
+- 30–40: **16.14%**
+- Under 30: **15.86%**
+- Over 40: **14.34%**
 
 ---
 
-### 4. Total Usage Time
+## Customer Risk Segmentation
 
-| Usage Time | Churn Rate |
-|---|---:|
-| Low | **40.14%** |
-| Medium | 19.80% |
-| High | 9.98% |
-| Very High | 0.33% |
+Based on the SQL findings, I created an explainable rule-based customer risk segmentation using:
 
-**Finding:** Customers with very low service usage had much higher churn than highly engaged customers.
+- Complaints
+- Customer activity status
+- Frequency of use
+- Subscription length
 
----
+### Segmentation Results
 
-### 5. SMS Usage
-
-| SMS Activity | Churn Rate |
-|---|---:|
-| No SMS | 22.72% |
-| Low | 21.51% |
-| Medium | 2.65% |
-| High | 0.75% |
-
-**Finding:** Customers with medium or high SMS activity had much lower churn.
-
----
-
-### 6. Distinct Called Numbers
-
-| Contact Level | Churn Rate |
-|---|---:|
-| Low | **31.26%** |
-| Medium | 14.41% |
-| High | 5.12% |
-| Very High | 0.00% |
-
-**Finding:** Customers interacting with fewer distinct numbers showed higher churn, providing another indicator of low engagement.
-
----
-
-### 7. Subscription Length
-
-| Subscription Length | Churn Rate |
-|---|---:|
-| 0–12 Months | **38.57%** |
-| 13–24 Months | 2.77% |
-| 25–36 Months | 18.85% |
-| 37+ Months | 13.16% |
-
-**Finding:** Customers in their first 12 months showed particularly high churn.
-
-The pattern was not completely linear, as the 13–24 month customer group had an unusually low churn rate.
-
----
-
-### 8. Tariff Plan
-
-| Tariff Plan | Churn Rate |
-|---|---:|
-| Plan A | **16.83%** |
-| Plan B | 2.45% |
-
-**Finding:** Plan A customers showed considerably higher churn than Plan B customers in this dataset.
-
----
-
-### 9. Age Group
-
-| Age Group | Churn Rate |
-|---|---:|
-| 30–40 | 16.14% |
-| Under 30 | 15.86% |
-| Over 40 | 14.34% |
-
-**Finding:** Churn rates were relatively similar across age groups, so age was not considered a major churn-risk indicator.
-
----
-
-### 10. Call Failures
-
-Call failures did not show a consistent pattern where churn increased as call failures increased.
-
-**Finding:** Call failures alone were not considered a strong churn indicator.
-
----
-
-# High-Risk Customer Groups
-
-After analyzing individual customer characteristics, combinations of high-risk behaviors were tested.
-
-| Customer Group | Customers | Churn Rate |
-|---|---:|---:|
-| Inactive + Complaint | 158 | **89.24%** |
-| Inactive + Low Usage | 446 | 42.83% |
-| Inactive + Complaint + Low Usage | 36 | **100%** |
-| Complaint + Low Usage | 63 | **100%** |
-| New Customer + Low Usage | 54 | **87.04%** |
-| Complaint + New Customer | 29 | **100%** |
-
-These combinations showed that **complaints, inactivity and low engagement together created particularly strong churn signals**.
-
-> Some segments with 100% churn contain relatively small numbers of customers, so these results should be interpreted carefully.
-
----
-
-# Customer Risk Segmentation
-
-Based on the SQL findings, I created an explainable **rule-based customer risk segmentation**.
-
-### High Risk
-
-Customers with a complaint and at least one of the following:
-
-- Inactive status
-- Low frequency of use
-- Subscription length of 12 months or less
-
-### Medium Risk
-
-Customers who had at least one of the following:
-
-- Inactive status
-- Low frequency of use
-- Subscription length of 12 months or less
-
-but did not meet the High-Risk criteria.
-
-### Low Risk
-
-Customers who did not meet the High- or Medium-Risk conditions.
-
----
-
-## Risk Segmentation Results
-
-| Risk Segment | Customers | Churned Customers | Churn Rate |
+| Risk Segment | Customers | Churned | Churn Rate |
 |---|---:|---:|---:|
 | **High Risk** | 190 | 173 | **91.05%** |
 | **Medium Risk** | 972 | 264 | **27.16%** |
@@ -294,77 +141,51 @@ This provides an explainable way to prioritize customers for retention efforts.
 
 ---
 
-# Tableau Dashboard
+## Business Recommendations
 
-The final Tableau dashboard presents the major churn indicators and allows users to explore customer risk segments interactively.
+### Prioritize complaint customers
 
-![Telecom Customer Churn Dashboard](dashboard/Telecom%20Customer%20Churn%20Analysis.png)
-### Dashboard KPIs
+Complaint customers showed an **82.99% churn rate**. Retention teams could prioritize faster complaint resolution and follow-up with dissatisfied customers.
 
-- **Total Customers:** 3,150
-- **Churned Customers:** 495
-- **Overall Churn Rate:** 15.71%
-- **High-Risk Customers:** 190
+### Monitor low-engagement customers
 
-### Dashboard Includes
+Low usage across service activity was consistently associated with higher churn. Customers showing low engagement could be investigated as potential retention priorities.
 
-- Churn Rate by Complaints
-- Churn Rate by Customer Status
-- Churn Rate by Risk Segment
-- Churn Rate by Usage Level
-- Churn Rate by Subscription Length
-- Interactive Risk Segment Filter
-- Key Business Insights
+### Improve early customer engagement
 
-## Interactive Dashboard
+Customers within their first year showed elevated churn, particularly when combined with low usage. Stronger onboarding and early engagement programs could help retention teams investigate this group.
 
-[**View the Interactive Tableau Dashboard →**](https://public.tableau.com/app/profile/shaurya.singh8249/viz/TelecomCustomerChurnAnalysisPublic/TelecomCustomerChurnAnalysis)
+### Focus retention resources on high-risk customers
+
+The High-Risk segment contains only **190 customers**, but **173 of them churned**.
+
+Retention efforts could therefore be prioritized toward customers displaying combinations of complaints, inactivity, low usage and early tenure.
 
 ---
 
-# Business Recommendations
+## SQL Analysis
 
-### 1. Prioritize Complaint Customers
+The complete SQL analysis is available here:
 
-Customers who submitted complaints showed an **82.99% churn rate**.
+[**View Complete SQL Analysis →**](sql/churn_analysis.sql)
 
-Retention teams could prioritize rapid complaint resolution and follow-up with dissatisfied customers.
+The SQL file includes:
 
-### 2. Monitor Low-Engagement Customers
+- Dataset validation
+- Overall churn calculations
+- Churn analysis by customer attributes
+- Customer engagement analysis
+- High-risk segment analysis
+- Rule-based risk segmentation
+- Tableau analysis view
 
-Low service usage was consistently associated with higher churn.
+### Detailed Analysis Notes
 
-Useful engagement indicators include:
-
-- Frequency of use
-- Seconds of use
-- SMS frequency
-- Number of distinct called numbers
-
-Customers showing low engagement could be investigated before they churn.
-
-### 3. Improve Early Customer Engagement
-
-Customers within their first 12 months showed a **38.57% churn rate**.
-
-New customers with low usage had an even higher **87.04% churn rate**.
-
-This suggests that onboarding and early customer engagement are important areas for retention teams to investigate.
-
-### 4. Prioritize High-Risk Customers
-
-The High-Risk segment contained **190 customers**, of whom **173 churned**.
-
-Instead of applying the same retention strategy to every customer, resources could be focused on customers showing combinations of:
-
-- Complaints
-- Inactivity
-- Low engagement
-- Early subscription tenure
+[**View SQL Analysis Notes →**](docs/SQL_Analysis_Notes.md)
 
 ---
 
-# Repository Structure
+## Repository Structure
 
 ```text
 telecom-customer-churn-analysis/
@@ -376,7 +197,7 @@ telecom-customer-churn-analysis/
 │   └── churn_analysis.sql
 │
 ├── dashboard/
-│   ├──Telecom Customer Churn Analysis.png
+│   ├── Telecom Customer Churn Analysis.png
 │   └── Telecom Customer Churn Analysis Public.twbx
 │
 ├── docs/
@@ -387,55 +208,15 @@ telecom-customer-churn-analysis/
 
 ---
 
-# Project Files
+## Limitations
 
-### SQL Analysis
+This project is an **exploratory and descriptive analysis**.
 
-[View Complete SQL Analysis](sql/churn_analysis.sql)
+The customer risk segments are rule-based and should not be interpreted as machine-learning churn probabilities.
 
-The SQL file contains:
+The identified relationships show **associations within this dataset** and do not prove that individual factors directly cause customer churn.
 
-- Dataset validation
-- Overall churn analysis
-- Churn analysis by customer characteristics
-- Customer engagement analysis
-- High-risk customer analysis
-- Risk segmentation logic
-- Tableau analysis view
-
-### Analysis Notes
-
-[View SQL Analysis Notes](docs/SQL_Analysis_Notes.md)
-
-### Tableau Workbook
-
-The packaged Tableau workbook is available inside the `dashboard` folder.
-
----
-
-# Key Takeaways
-
-The strongest churn indicators identified in this project were:
-
-1. **Customer complaints**
-2. **Inactive customer status**
-3. **Low service usage**
-4. **Low overall customer engagement**
-5. **Early subscription tenure**
-
-The analysis also showed that combining multiple customer behaviors provided much stronger churn-risk signals than analyzing many variables individually.
-
----
-
-# Limitations
-
-This project is an exploratory and descriptive analysis.
-
-The customer risk segments are **rule-based segments**, not churn probabilities generated using a machine-learning model.
-
-The findings represent **associations within this dataset** and should not be interpreted as proof that any individual factor directly causes customer churn.
-
-Some high-risk customer combinations also contain relatively small sample sizes and should therefore be interpreted carefully.
+Some high-risk customer combinations also contain relatively small numbers of customers and should therefore be interpreted carefully.
 
 ---
 
