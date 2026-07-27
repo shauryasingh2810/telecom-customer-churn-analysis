@@ -27,6 +27,13 @@ The main objective was to answer:
 
 The dataset contains **3,150 customer records** and information about customer activity, usage, complaints, subscription length and churn.
 
+### Data Source
+
+This project uses a processed version of the Iranian Telecom Churn Dataset.
+
+- Original dataset: [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/563/iranian+churn+dataset)
+- Portfolio dataset: [Kaggle - Iranian Telecom Company Churn](https://www.kaggle.com/datasets/tombutton/iranian-telecom-company-churn)
+
 ### Target Variable
 
 - `1` = Churned
