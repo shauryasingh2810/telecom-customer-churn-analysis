@@ -291,8 +291,7 @@ This provides an explainable way to prioritize customers for retention efforts.
 
 The final Tableau dashboard presents the major churn indicators and allows users to explore customer risk segments interactively.
 
-![Telecom Customer Churn Dashboard](dashboard/telecom_churn_dashboard.png)
-
+![Telecom Customer Churn Dashboard](dashboard/Telecom%20Customer%20Churn%20Analysis.png)
 ### Dashboard KPIs
 
 - **Total Customers:** 3,150
