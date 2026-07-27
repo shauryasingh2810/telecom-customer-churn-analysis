@@ -341,7 +341,7 @@ Useful engagement indicators include:
 - SMS frequency
 - Number of distinct called numbers
 
-Customers showing declining engagement could be investigated before they churn.
+Customers showing low engagement could be investigated before they churn.
 
 ### 3. Improve Early Customer Engagement
 
