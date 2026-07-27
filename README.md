@@ -369,7 +369,7 @@ telecom-customer-churn-analysis/
 │   └── churn_analysis.sql
 │
 ├── dashboard/
-│   ├── telecom_churn_dashboard.png
+│   ├──Telecom Customer Churn Analysis.png
 │   └── Telecom Customer Churn Analysis Public.twbx
 │
 ├── docs/
